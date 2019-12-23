@@ -1,7 +1,6 @@
 fingerprint_validation
 ==============================
 
-A short description of the project.
 
 Project Organization
 ------------
