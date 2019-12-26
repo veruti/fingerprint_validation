@@ -1,6 +1,7 @@
 import os
 import cv2 as cv
 from numpy.random import choice
+from .filepaths import *
 
 
 TYPES = ['.jpg', '.jpeg', '.jpe',
@@ -11,11 +12,15 @@ TYPES = ['.jpg', '.jpeg', '.jpe',
          '.tiff', '.tif']
 
 
-# Function for checking image type
-
 def check_im_type(name: str):
     """
-    check_im_type(name: str) -> bool
+    Args:
+        name: image name
+    Function for checking type of image
+
+    Returns: bool
+    True if image has one of TYPES type
+    False if it's not an image
     """
     fl = False
     for tp in TYPES:
@@ -25,22 +30,30 @@ def check_im_type(name: str):
     return fl
 
 
-# function for getting
-
 def images_dir_list(listdir):
+    """
+    Args:
+        listdir: list of images paths
+
+    Function for
+    Returns: list of image paths
+
+    """
     return [name for name in listdir if check_im_type(name)]
 
 
-# Read random function for images
-
 def read_random_image(file_path, with_path=False, flag=cv.IMREAD_GRAYSCALE):
-    '''
-    read_random_image(file_path, [with_path=False, [flag=cv.IMREAD_GRAYSCALE)
-    file_path - file, where images are stored
-    with_path - if True return image's filepath and image
-    flag - constant values from cv.imread(). Default cv.IMREAD_GREAYSCALE
-    '''
+    """
 
+    Args:
+        file_path: Str. File path to folder
+        with_path: Bool. Return file_path
+        flag: cv.IMREAD_* flag
+    Read and return random image for file
+
+    Returns: image
+
+    """
     images_list = images_dir_list(os.listdir(file_path))
     image_name = choice(images_list)
     image_path = file_path + image_name
