@@ -1,19 +1,44 @@
 import cv2 as cv
-
+import numpy as np
 from skimage.filters.rank import enhance_contrast_percentile
 from skimage.morphology import disk
 from .other import find_contours_result
 
 
 def threshold_with_enhance(im, ker_ksize=20, p0=0.1, p1=.6):
+    """
+
+    Args:
+        im: fingerprint image
+        ker_ksize: disk kernel size
+        p0: first parameter
+        p1: second parameter
+
+    Use  enhance contrast percentile for getting binary inv
+    Returns: binary fingeprint image
+
+    """
     disk_ker = disk(ker_ksize)
-    ecnh_im = enhance_contrast_percentile(inv_im, disk_ker, p0=p0, p1=p1)
-    thresh = cv.threshold(ecnh_im, 0, 255, cv.THRESH_BINARY)[1]
+    enh_im = enhance_contrast_percentile(im, disk_ker, p0=p0, p1=p1)
+    thresh = cv.threshold(enh_im, 0, 255, cv.THRESH_BINARY)[1]
     
     return thresh
 
 
 def get_mask(im, ker_ksize=20, p0=0.1, p1=.6):
+    """
+
+    Args:
+        im: fingeprint image
+        ker_ksize: disk kernel size
+        p0: first parameter
+        p1: second parameter
+
+    Function for getting mask of fingerprint image
+
+    Returns: mask of fingerprint image
+
+    """
     thresh_im = threshold_with_enhance(im, ker_ksize=ker_ksize, p0=p0, p1=p1)
     res = cv.findContours(thresh_im, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
 
