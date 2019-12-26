@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-
+from .other import *
 
 def invers_color(image):
     """
@@ -66,15 +66,17 @@ def crop_fp_image(fp_image, bound_const=5, with_golden_ratio=True):
     temp_image = fp_image
 
     # get contours and unite contours
-    _1, contours, _2 = cv.findContours(image=temp_image, mode=cv.RETR_EXTERNAL,
-                                       method=cv.CHAIN_APPROX_SIMPLE)
-    new_contour = np.vstack(contours)
+    res = cv.findContours(image=temp_image, mode=cv.RETR_EXTERNAL,
+                          method=cv.CHAIN_APPROX_SIMPLE)
 
+    contours, hierarchy = find_contours_result(res)
+    new_contour = np.vstack(contours)
+    
     # find parameters of bounding rectangle
     x1, y1, width, height = cv.boundingRect(new_contour)
     x2, y2 = x1 + width, y1 + height
     x1, y1 = x1, y1
-    
+
     # check coordinates of rectangle
     if x1 < 0:
         x1 = 0
@@ -87,17 +89,16 @@ def crop_fp_image(fp_image, bound_const=5, with_golden_ratio=True):
 
     if y2 > temp_image.shape[0]:
         y2 = temp_image.shape[0]
-    
+
     # make new image
     resized_image = temp_image[y1:y2, x1:x2]
 
     # crop bottom peace of fingeprint
     if with_golden_ratio:
         resized_image = get_golden_ratio_image(resized_image)
-        
-    resized_image = cv.copyMakeBorder(resized_image, bound_const, bound_const, 
+
+    resized_image = cv.copyMakeBorder(resized_image, bound_const, bound_const,
                       bound_const, bound_const, cv.BORDER_CONSTANT, value=0)
-    
     return resized_image
 
 
