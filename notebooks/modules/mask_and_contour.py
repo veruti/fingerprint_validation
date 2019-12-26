@@ -5,7 +5,7 @@ from skimage.morphology import disk
 from .other import find_contours_result
 
 
-def threshold_with_enhance(im, ker_ksize=20, p0=0.1, p1=.6):
+def threshold_with_enhance(im, ker_ksize=20, p0=0.1, p1=.45):
     """
 
     Args:

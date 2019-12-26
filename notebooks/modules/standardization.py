@@ -1,6 +1,8 @@
 import cv2 as cv
 import numpy as np
 from .other import *
+from .mask_and_contour import get_mask
+
 
 def invers_color(image):
     """
@@ -71,7 +73,7 @@ def crop_fp_image(fp_image, bound_const=5, with_golden_ratio=True):
 
     contours, hierarchy = find_contours_result(res)
     new_contour = np.vstack(contours)
-    
+
     # find parameters of bounding rectangle
     x1, y1, width, height = cv.boundingRect(new_contour)
     x2, y2 = x1 + width, y1 + height
@@ -119,26 +121,36 @@ def resize_fp_image(im, new_width=400, interpolation=cv.INTER_LINEAR):
     k = height/width
 
     resized_image = cv.resize(im, (new_width, int(new_width*k)), interpolation=interpolation)
-    
+
     return resized_image
 
 
-def standardize_image(im, bound_const=5, new_width=400, interpolation=cv.INTER_LINEAR, with_golden_ratio=True):
+def standardize_image(im, bound_const=5, new_width=400, interpolation=cv.INTER_LINEAR,
+                      with_golden_ratio=True, with_ench=True, ker_ksize=20, p0=0.1, p1=.45):
     """
 
     Args:
-        im: fingeprint image
+        im: fingerprint imgae
         bound_const: width of border around fingerprint image
         new_width: new_width of fingerprint image
         interpolation: Interpolation method
         with_golden_ratio: bool. Use or not golden ratio proportion
-    Function crop fingerprint image and standardize it
+        with_ench: use enhancement
+        ker_ksize: disk kernel size
+        p0: first parameter
+        p1: second parameter
+
+    Function for getting standardize fingerprint image
 
     Returns: standardize fingerprint image
-
     """
+    
     inv_im = invers_color(im)
-    crop_im = crop_fp_image(inv_im, bound_const=bound_const, with_golden_ratio=with_golden_ratio)
-    resized_im = resize_fp_image(crop_im, new_width=new_width, interpolation=interpolation)
+    if with_ench:
+        mask = get_mask(inv_im, ker_ksize=ker_ksize, p0=p0, p1=p1) == 255
+        inv_im[mask==False] = 0
+
+    crop_im = crop_fp_image(inv_im)
+    resized_im = resize_fp_image(crop_im)
     
     return resized_im
