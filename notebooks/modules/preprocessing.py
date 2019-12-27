@@ -77,15 +77,16 @@ def preproc_image(im, ksize=3, n_iter=1, blend=0.5):
         1) Gaussian blur
         2) Histogramm equalization
         3) Coherence filter
-        4) Otsu threshold
-
+        4) Adaptive threshold (Otsu threshold?)
+    
     Returns: ndarray
     Function returns
     """
-    
+
     gaus_im = cv.GaussianBlur(im, (ksize,)*2, -1)
     eqhist_im = cv.equalizeHist(gaus_im)
     coh_im = coherence_filter(eqhist_im, n_iter=n_iter, blend=blend)
-    thresh = cv.threshold(coh_im, 0, 255, cv.THRESH_OTSU)[1]
+    #thresh = cv.threshold(coh_im, 0, 255, cv.THRESH_OTSU)[1]
+    thresh = cv.adaptiveThreshold(coh_im, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 31, 0)
     
     return thresh
