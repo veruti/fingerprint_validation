@@ -25,29 +25,38 @@ def threshold_with_enhance(im, ker_ksize=20, p0=0.1, p1=.45):
     return thresh
 
 
-def get_mask(im, ker_ksize=20, p0=0.1, p1=.6):
+def get_mask(im, ker_ksize=20, p0=0.1, p1=.45, with_ench=True):
     """
 
     Args:
-        im: fingeprint image
-        ker_ksize: disk kernel size
-        p0: first parameter
-        p1: second parameter
+        with_ench: bool
+            use image enhance
+        im: ndarray
+            fingeprint image
+        ker_ksize: int
+            disk kernel size
+        p0: float [0,...,1] p0 < p1
+            first parameter
+        p1: float [0,...,1] p0 < p1
+            second parameter
 
     Function for getting mask of fingerprint image
 
     Returns: mask of fingerprint image
 
     """
-    thresh_im = threshold_with_enhance(im, ker_ksize=ker_ksize, p0=p0, p1=p1)
-    res = cv.findContours(thresh_im, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
+    if with_ench:
+        thresh_im = threshold_with_enhance(im, ker_ksize=ker_ksize, p0=p0, p1=p1)
+        res = cv.findContours(thresh_im, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
+    else:
+        res = cv.findContours(im, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
 
     contours, hierarchy = find_contours_result(res)
-    merge_contours = np.vstack(contours)
-
+    merge_contours = np.vstack(contours) 
+    
     hull = cv.convexHull(merge_contours)
-
+    
     mask = np.zeros((im.shape[0], im.shape[1]), dtype=np.uint8)
     mask = cv.fillConvexPoly(mask, hull, 255)
-
+    
     return mask
