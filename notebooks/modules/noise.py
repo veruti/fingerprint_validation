@@ -3,8 +3,23 @@ import numpy as np
 from .mask_and_contour import get_mask
 from itertools import combinations as comb
 
-def get_gradient(image, rx=1, ry=1):
 
+def get_gradient(image, rx=1, ry=1):
+    """
+
+    Args:
+        image: ndarray
+            fingerprint image
+        rx: int
+            degree of x derivative
+        ry:
+            degree of u derivative
+    Function compute gradient using Sobel operator
+
+    Returns: ndarray, ndarray
+        x derivative, y derivative
+
+    """
     dx = cv.Sobel(image, cv.CV_64F, rx, 0)
     dy = cv.Sobel(image, cv.CV_64F, 0, ry)
 
@@ -12,6 +27,23 @@ def get_gradient(image, rx=1, ry=1):
 
 
 def avg_grad(gx, gy, ksize, with_sqrt=True):
+    """
+
+    Args:
+        gx: ndarray
+            x derivative
+        gy: ndarray
+            y derivative
+        ksize: int
+            kernel size
+        with_sqrt: bool
+            use square root or not
+    Function averages gradients in the local sense
+
+    Returns: ndarray, ndarray
+    function return average x and y derivatives
+    """
+
     gsq_real = np.square(gx) - np.square(gy)
     gsq_imag = 2 * gx * gy
 
@@ -29,6 +61,20 @@ def avg_grad(gx, gy, ksize, with_sqrt=True):
 
 
 def norm_vector(dx, dy, eps=1e-3):
+    """
+
+    Args:
+        dx: ndarray
+            x part of vector
+        dy: ndarray
+            y part of vector
+        eps: float
+            small number
+    Function normalizes vectors
+
+    Returns: ndarray, ndarray
+        x and y normalized part of vectors
+    """
     lengths = np.sqrt(np.square(dx) + np.square(dy))
     norm_dx, norm_dy = np.divide(dx, np.add(lengths, eps)), np.divide(dy, np.add(lengths, eps))
 
