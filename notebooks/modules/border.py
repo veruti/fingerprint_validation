@@ -1,3 +1,7 @@
+import numpy as np
+import cv2 as cv
+
+
 def left_right_border(img, left_perc=0.15, right_perc=0.15):
     
     cs = np.cumsum(np.sum(img, axis=0))
@@ -28,3 +32,10 @@ def top_bottom_border(img, top_perc=0.10, bottom_perc=0.10):
     contour_bottom[:i2, :] = 0   
     
     return contour_top, contour_bottom
+
+
+def distance_transform_percentiles(image, percs=[90, 95, 100]):
+    ds = cv.distanceTransform(image, cv.DIST_L1, cv.DIST_MASK_3)
+    ds_ = ds[ds != 0]
+
+    return np.percentile(ds_, percs)
