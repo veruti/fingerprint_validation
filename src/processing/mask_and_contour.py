@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 from skimage.filters.rank import enhance_contrast_percentile
 from skimage.morphology import disk
-from .other import find_contours_result
+from ..other.other import find_contours_result
 
 
 def threshold_with_enhance(im, ker_ksize=20, p0=0.1, p1=.45):

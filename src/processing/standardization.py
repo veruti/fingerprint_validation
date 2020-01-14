@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
-from .other import *
-from .mask_and_contour import get_mask
+from ..other.other import *
+from ..processing.mask_and_contour import get_mask
 
 
 def invers_color(image):

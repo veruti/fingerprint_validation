@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 from .border import *
-from .other import find_contours_result
+from ..other.other import find_contours_result
 
 def r_max(image, flag='h', percs=[80, 90, 100]):
     
