@@ -38,6 +38,13 @@ def get_proportion(im):
 
 
 def get_golden_ratio_image(im):
+    """
+    Args:
+        im: 2d ndarray
+            image
+    Returns: 2d ndarray
+        Function returns image with image.shape[1]/image.shape[0]
+    """
     phi = (np.sqrt(5) + 1) / 2
     pr = get_proportion(im)
 

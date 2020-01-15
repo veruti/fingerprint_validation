@@ -3,7 +3,20 @@ import cv2 as cv
 
 
 def left_right_border(img, left_perc=0.15, right_perc=0.15):
-    
+    """
+
+    Args:
+        img: ndarray
+            image
+        left_perc: float [0,...,1]
+            left percentile
+        right_perc: float [0,...,1]
+            right percentile
+    Get left and right peaces of image
+
+    Returns: ndarray, ndarray
+    Left and right peaces of image
+    """
     cs = np.cumsum(np.sum(img, axis=0))
     cs = cs / cs[-1]
     j1 = np.argmax(cs > left_perc)
@@ -19,7 +32,19 @@ def left_right_border(img, left_perc=0.15, right_perc=0.15):
 
 
 def top_bottom_border(img, top_perc=0.10, bottom_perc=0.10):
-    
+    """
+    Args:
+        img: ndarray
+        top_perc: float [0,...,1]
+            top percentile
+        bottom_perc: float [0,...,1]
+            bottom percentile
+    Get left and right peaces of image
+
+    Returns: ndarray, ndarray
+    Top and bottom peaces of image
+
+    """
     cs = np.cumsum(np.sum(img, axis=1))
     cs = cs / cs[-1]
     i1 = np.argmax(cs > top_perc)
@@ -35,6 +60,17 @@ def top_bottom_border(img, top_perc=0.10, bottom_perc=0.10):
 
 
 def distance_transform_percentiles(image, percs=[90, 95, 100]):
+    """
+    Args:
+        image: ndarray
+            image
+        percs: floats [0,...,1]
+            Percentiles of distance transform distribution
+    Function returns precentiles of Percentiles of distance transform distribution
+
+    Returns: 1d ndarray
+    Function returns
+    """
     ds = cv.distanceTransform(image, cv.DIST_L1, cv.DIST_MASK_3)
     ds_ = ds[ds != 0]
 

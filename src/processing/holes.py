@@ -4,11 +4,21 @@ import cv2 as cv
 
 
 def get_horizontal_vertical_mean_percentiles(im, percs=[30, 60, 90, 100]):
+    """
+    Args:
+        im: 2d ndarray
+            image
+        percs: list or ndarray
+
+
+    Returns:
+
+    """
     result = np.array([])
     mask = get_mask(im, with_ench=False)
 
     inv_im = cv.bitwise_not(im)
-    inv_im[mask == False] = 0
+    inv_im[mask==False] = 0
 
     orig_v_sum = np.percentile(im.mean(axis=0), percs)
     orig_h_sum = np.percentile(im.mean(axis=1), percs)
